@@ -1,30 +1,62 @@
 "use client"
-import React, { useState } from "react";
-import LoginLogos from "../../components/LoginLogos"
-import LoginImage from '../../components/LoginImage'
-import getData from "../Data/getData";
+import React, { useState, useEffect } from "react";
+import LoginLogos from "../../components/LoginLogos";
+import LoginImage from '../../components/LoginImage';
 import { useRouter } from "next/navigation";
 
 export default function DrLogin() {
-  const [drId, setDrId] = useState();
-  const [hastaneAdi, setHastaneAdi] = useState();
+  const [drId, setDrId] = useState("");
+  const [hastaneAdi, setHastaneAdi] = useState("");
+  const [doctors, setDoctors] = useState([]);
+  const [hospitals, setHospitals] = useState([]);
   const router = useRouter();
 
-  const handleLogin = async () => {
-    const doctors = await getData("DOCTOR");
-    const hospitals = await getData("HOSPİTAL");
-
-    const hospital = hospitals.find(h => h.hastaneAdi == hastaneAdi);
-    if (hospital) {
-      const control = doctors.find(d => d.doktorID == drId && d.hastaneID == hospital.hastaneID);
-      if (control) {
-        router.push("/drDash");
-      } else {
-        alert('Hatalı drID veya hastaneAdi');
+  useEffect(() => {
+    async function fetchHospital() {
+      try {
+        const response = await fetch('/api/getData/Hospital', { method: 'GET' });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setHospitals(data.rows)
       }
-    } else {
-      alert('Hatalı drID veya hastaneAdi');
+      catch (error) {
+        console.error('Error fetching data:', error);
+        setHospitals([])
+      }
     }
+    async function fetchDoctor() {
+      try {
+        const response = await fetch('/api/getData/Doctor', { method: 'GET' });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setDoctors(data.rows)
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+        setDoctors([])
+      }
+    }
+    fetchDoctor()
+    fetchHospital()
+    },[])
+
+  const handleLogin = async () => {     
+      const doctor = doctors.find(d => d.doktorID == drId);
+      if (doctor) {
+        const control = hospitals.find(h => h.hastaneAdi == hastaneAdi && h.hastaneID == doctor.hastaneID)
+        if (control) {
+          router.push("/drDash");
+        }
+        else
+          alert('Hatalı drID veya hastaneAdi');
+      } 
+      else {
+        alert('Hatalı drID veya hastaneAdi');
+      } 
   };
 
   return (
@@ -52,7 +84,6 @@ export default function DrLogin() {
             onClick={handleLogin}>Giriş Yap
           </button>
         </div>
-
       </header>
       <LoginImage />
     </main>

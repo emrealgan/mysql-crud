@@ -1,18 +1,36 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginLogos from "../../components/LoginLogos"
 import LoginImage from "../../components/LoginImage"
-import getData from "../Data/getData";
 import { useRouter } from "next/navigation";
 
 export default function CitizenLogin() {
   const [citizenID, setCitizenID] = useState();
   const [phone, setPhone] = useState();
+  const [citizens, setCitizens] = useState();
   const router = useRouter();
+
+  useEffect(() => {
+    async function fetchPatient() {
+      try {
+        const response = await fetch('http://localhost:3000/api/getData/Patient', { method: 'GET' });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setCitizens(data.rows)
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+        setCitizens([])
+      }
+    }
+    fetchPatient();
+  }, [])
 
   const handleLogin = async () => {
 
-    const citizens = await getData("PATİENT");
+    
     const control = citizens.find(c => c.hastaID == citizenID && c.telefon == phone);
     if (control) {
       router.push("/citizenDash");

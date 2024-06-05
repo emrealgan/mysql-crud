@@ -11,6 +11,7 @@
   "dependencies": {
     "mysql2": "^3.9.8",
     "next": "14.2.3",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1"
