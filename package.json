@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "js-cookie": "^3.0.5",
     "mysql2": "^3.9.8",
     "next": "14.2.3",
     "next-auth": "^4.24.7",

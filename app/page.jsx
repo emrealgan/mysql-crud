@@ -8,11 +8,19 @@ import logoHos from '../public/logo2.png';
 import home1 from '../public/home1.png';
 import home2 from '../public/home2.png';
 import home3 from '../public/home3.png';
+import Cookies from 'js-cookie'; 
+
 
 export default function Home() {
 
   useEffect(() => {
-    createDatabaseAndTables()
+    createDatabaseAndTables();
+    Cookies.set('adminAuth', 'false');
+    Cookies.set('drAuth', 'false');
+    Cookies.set('citizenAuth', 'false');
+    Cookies.set('adminObject', null);
+    Cookies.set('drObject', null);
+    Cookies.set('citizenObject', null);
   }, []);
   
   const images = [

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import LoginLogos from "../../components/LoginLogos";
 import LoginImage from '../../components/LoginImage';
 import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
 
 export default function DrLogin() {
   const [drId, setDrId] = useState("");
@@ -49,7 +50,8 @@ export default function DrLogin() {
       if (doctor) {
         const control = hospitals.find(h => h.hastaneAdi == hastaneAdi && h.hastaneID == doctor.hastaneID)
         if (control) {
-          router.push("/drDash");
+          Cookies.set('drAuth', 'true'); // Set the cookie
+          Cookies.set('drObject', JSON.stringify(control)); // Set the cookie
         }
         else
           alert('Hatalı drID veya hastaneAdi');

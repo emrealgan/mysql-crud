@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import LoginLogos from "../../components/LoginLogos";
 import LoginImage from "../../components/LoginImage";
 import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -31,8 +32,10 @@ export default function AdminLogin() {
   const handleLogin = () => {
     const control = admins.find(a => a.username === username && a.password === password);
     if (control) {
-      router.push("/admin");
-    } else {
+      Cookies.set('adminAuth', 'true'); // Set the cookie
+      Cookies.set('adminObject', JSON.stringify(control)); // Set the cookie
+    } 
+    else {
       alert('Hatalı kullanıcı adı veya şifre');
     }
   };
