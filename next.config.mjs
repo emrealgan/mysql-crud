@@ -5,7 +5,8 @@ const nextConfig = {
       DB_HOSTNAME: 'localhost',
       DB_USER: 'root',
       DB_PORT: '3306',
-      DB_NAME: 'prolab2'
+      DB_NAME: 'prolab2',
+      JWT_SECRET_KEY: 'RHTKSGRL-RUGT'
     }
 };
 

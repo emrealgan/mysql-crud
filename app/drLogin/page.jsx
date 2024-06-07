@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import LoginLogos from "../../components/LoginLogos";
 import LoginImage from '../../components/LoginImage';
-import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
 
 export default function DrLogin() {
@@ -10,7 +9,6 @@ export default function DrLogin() {
   const [hastaneAdi, setHastaneAdi] = useState("");
   const [doctors, setDoctors] = useState([]);
   const [hospitals, setHospitals] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchHospital() {
@@ -46,12 +44,19 @@ export default function DrLogin() {
     },[])
 
   const handleLogin = async () => {     
+    
       const doctor = doctors.find(d => d.doktorID == drId);
       if (doctor) {
         const control = hospitals.find(h => h.hastaneAdi == hastaneAdi && h.hastaneID == doctor.hastaneID)
         if (control) {
-          Cookies.set('drAuth', 'true'); // Set the cookie
-          Cookies.set('drObject', JSON.stringify(control)); // Set the cookie
+          const token = await new SignJWT({
+            id: control.doktorID
+          })
+          .setProtectedHeader({ alg: 'HS256'})
+          .setIssuedAt()
+          .setExpirationTime('1m')
+          .sign(getJWTSecretKey())
+          Cookies.set('doctorToken', token);
         }
         else
           alert('Hatalı drID veya hastaneAdi');

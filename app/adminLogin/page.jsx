@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from "react";
 import LoginLogos from "../../components/LoginLogos";
 import LoginImage from "../../components/LoginImage";
-import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
+import { SignJWT } from "jose";
+import { getJWTSecretKey } from "../lib/auth";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [admins, setAdmins] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -29,11 +29,18 @@ export default function AdminLogin() {
     fetchAdmins();
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const control = admins.find(a => a.username === username && a.password === password);
     if (control) {
-      Cookies.set('adminAuth', 'true'); // Set the cookie
-      Cookies.set('adminObject', JSON.stringify(control)); // Set the cookie
+      const token = await new SignJWT({
+        id: control.yoneticiID
+      })
+      .setProtectedHeader({ alg: 'HS256'})
+      .setIssuedAt()
+      .setExpirationTime('1m')
+      .sign(getJWTSecretKey())
+      Cookies.set('adminToken', token);
+      console.log(token)
     } 
     else {
       alert('Hatalı kullanıcı adı veya şifre');

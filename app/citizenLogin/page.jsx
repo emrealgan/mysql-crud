@@ -2,14 +2,12 @@
 import React, { useEffect, useState } from "react";
 import LoginLogos from "../../components/LoginLogos"
 import LoginImage from "../../components/LoginImage"
-import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
 
 export default function CitizenLogin() {
   const [citizenID, setCitizenID] = useState();
   const [phone, setPhone] = useState();
   const [citizens, setCitizens] = useState();
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchPatient() {
@@ -31,11 +29,16 @@ export default function CitizenLogin() {
 
   const handleLogin = async () => {
 
-    
     const control = citizens.find(c => c.hastaID == citizenID && c.telefon == phone);
     if (control) {
-      Cookies.set('citizenAuth', 'true'); // Set the cookie
-      Cookies.set('citizenObject', JSON.stringify(control)); // Set the cookie
+      const token = await new SignJWT({
+        id: control.hastaID
+      })
+      .setProtectedHeader({ alg: 'HS256'})
+      .setIssuedAt()
+      .setExpirationTime('1m')
+      .sign(getJWTSecretKey())
+      Cookies.set('citizenToken', token);
     }
     else {
       alert('Hatalı ID no veya telefon numarası');

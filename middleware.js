@@ -1,27 +1,29 @@
 import { NextResponse } from 'next/server';
-import Cookies from 'js-cookie';
+import { verifyToken } from './app/lib/auth';
 
-export function middleware(request) {
+export async function middleware(request) {
   
   const url = request.nextUrl.clone();
   const pathname = url.pathname;
+  const cookies = request.cookies;
 
-  const adminAuth = Cookies.get('adminAuth');
-  const drAuth = Cookies.get('drAuth');
-  const citizenAuth = Cookies.get('citizenAuth');
+  // const { value: token } = Cookies.get("token") ?? { value: null };
+  const adminToken = cookies.get('adminToken');
+  const doctorToken = cookies.get('doctorToken');
+  const citizenToken = cookies.get('citizenToken');
 
   // Define the protected paths and their corresponding authentication and redirect logic
   const protectedPaths = {
     '/admin': {
-      isAuthenticated: adminAuth,
+      isAuthenticated: adminToken,
       loginPath: '/adminLogin',
     },
     '/drDash': {
-      isAuthenticated: drAuth,
+      isAuthenticated: doctorToken,
       loginPath: '/drLogin',
     },
     '/citizenDash': {
-      isAuthenticated: citizenAuth,
+      isAuthenticated: citizenToken,
       loginPath: '/citizenLogin',
     }
   };
@@ -29,22 +31,23 @@ export function middleware(request) {
   // Define the login paths and their corresponding redirection if already authenticated
   const loginPaths = {
     '/adminLogin': {
-      isAuthenticated: adminAuth,
+      isAuthenticated: adminToken,
       redirectPath: '/admin',
     },
     '/drLogin': {
-      isAuthenticated: drAuth,
+      isAuthenticated: doctorToken,
       redirectPath: '/drDash',
     },
     '/citizenLogin': {
-      isAuthenticated: citizenAuth,
+      isAuthenticated: citizenToken,
       redirectPath: '/citizenDash',
     }
   };
 
   // Check if the current path is a protected path
   if (protectedPaths[pathname]) {
-    if (!protectedPaths[pathname].isAuthenticated) {
+    const control = await verifyToken(protectedPaths[pathname].isAuthenticated)
+    if (!control) {
       url.pathname = protectedPaths[pathname].loginPath;
       return NextResponse.redirect(url);
     }
@@ -52,7 +55,8 @@ export function middleware(request) {
 
   // Check if the current path is a login path
   if (loginPaths[pathname]) {
-    if (loginPaths[pathname].isAuthenticated) {
+    const control = await verifyToken(loginPaths[pathname].isAuthenticated)
+    if (control) {
       url.pathname = loginPaths[pathname].redirectPath;
       return NextResponse.redirect(url);
     }
