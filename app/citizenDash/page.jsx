@@ -1,13 +1,28 @@
 "use client"
-import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie'; 
+import React from 'react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function CitizenDash() {
+  const { data: session, status } = useSession();
 
-    console.log(Cookies.get('citizenObject'))
-    return (
-        <div>
-        
-        </div>
-    );
-};
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+  console.log(session)
+if (session.user.role !== "patient") {
+    return <div>You are not authenticated.</div>;
+  }
+
+  return (
+    <div>
+      <button
+        className="mt-2 p-2 bg-red-500 text-white"
+        onClick={() => signOut()}
+      >
+        Logout
+      </button>
+      <h1>Welcome, {session.user.username}!</h1>
+      <p>Your role is: {session.user.role}</p>
+    </div>
+  );
+}

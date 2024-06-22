@@ -1,20 +1,19 @@
-"use strict"
-import { dbConfig } from "@/app/lib/dbConfig";
-import mysql from "mysql2/promise";
+"use server"
+import { query } from "@/app/lib/dbConnection";
+import { NextResponse } from "next/server";
 
 export async function PUT(req) {
-  const pool = mysql.createPool(dbConfig);
   try {
     const body = await req.json();  
     const { sql, values } = body;  
-    const result = await pool.execute(sql, values);
-    return Response.json({ message: 'User added successfully', data: result });
+    const result = await query({
+      query: sql,
+      values: values,
+    });
+    return NextResponse.json({ message: 'User added successfully', data: result });
   } 
   catch (error) {
     console.error('Database insert error:', error);
-    return Response.json({ message: 'Error adding user' });
+    return NextResponse.json({ message: 'Error adding user' });
   } 
-  finally {
-    pool.end();
-  }
 }

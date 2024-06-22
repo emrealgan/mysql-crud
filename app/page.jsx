@@ -8,19 +8,11 @@ import logoHos from '../public/logo2.png';
 import home1 from '../public/home1.png';
 import home2 from '../public/home2.png';
 import home3 from '../public/home3.png';
-import Cookies from 'js-cookie'; 
-
 
 export default function Home() {
 
   useEffect(() => {
     createDatabaseAndTables();
-    Cookies.set('adminAuth', 'false');
-    Cookies.set('drAuth', 'false');
-    Cookies.set('citizenAuth', 'false');
-    Cookies.set('adminObject', null);
-    Cookies.set('drObject', null);
-    Cookies.set('citizenObject', null);
   }, []);
   
   const images = [
@@ -46,9 +38,9 @@ export default function Home() {
         </div>
 
         <div id="buttons" className="flex items-end	justify-start mr-32 pr-20">
-          <Link href="citizenLogin" className="m-4 bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded">Randevu Al</Link>
-          <Link href="drLogin" className="m-4 bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded">Doktor Paneli</Link>
-          <Link href="adminLogin" className="m-4 bg-blue-900 hover:bg-blue-800 text-white py-2 px-4 rounded">Admin Paneli</Link>
+          <Link href="/citizenLogin" className="m-4 bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded">Randevu Al</Link>
+          <Link href="/drLogin" className="m-4 bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded">Doktor Paneli</Link>
+          <Link href="/adminLogin" className="m-4 bg-blue-900 hover:bg-blue-800 text-white py-2 px-4 rounded">Admin Paneli</Link>
 
         </div>
       </header>

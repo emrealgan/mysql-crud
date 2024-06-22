@@ -1,47 +1,30 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import LoginLogos from "../../components/LoginLogos"
-import LoginImage from "../../components/LoginImage"
-import Cookies from 'js-cookie';
+import LoginLogos from "@/components/LoginLogos";
+import LoginImage from "@/components/LoginImage";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function CitizenLogin() {
   const [citizenID, setCitizenID] = useState();
   const [phone, setPhone] = useState();
-  const [citizens, setCitizens] = useState();
-
-  useEffect(() => {
-    async function fetchPatient() {
-      try {
-        const response = await fetch('http://localhost:3000/api/getData/Patient', { method: 'GET' });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setCitizens(data.rows)
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
-        setCitizens([])
-      }
-    }
-    fetchPatient();
-  }, [])
+  const router = useRouter();
 
   const handleLogin = async () => {
 
-    const control = citizens.find(c => c.hastaID == citizenID && c.telefon == phone);
-    if (control) {
-      const token = await new SignJWT({
-        id: control.hastaID
-      })
-      .setProtectedHeader({ alg: 'HS256'})
-      .setIssuedAt()
-      .setExpirationTime('1m')
-      .sign(getJWTSecretKey())
-      Cookies.set('citizenToken', token);
+   
+    const result = await signIn('credentials', {
+      username: citizenID,
+      password: phone,
+      role: "patient",
+      redirect: false
+    });
+
+    if (result.error) {
+      alert("Hatalı")
     }
-    else {
-      alert('Hatalı ID no veya telefon numarası');
+    else if(result.ok){
+      router.push('/citizenDash');
     }
   };
 

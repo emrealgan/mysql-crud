@@ -61,6 +61,7 @@ export default function DoctorList() {
         console.error('Error fetching data:', error);
         setDoctors([])
       }
+      console.log(doctors)
     }
     function messageToast(){
       if(isSuccess)

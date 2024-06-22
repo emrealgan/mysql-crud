@@ -1,16 +1,16 @@
-"use strict"
-import { dbConfig } from "@/app/lib/dbConfig";
-import mysql from "mysql2/promise";
+"use server"
+import { query } from "@/app/lib/dbConnection";
+import { NextResponse } from "next/server";
 
 async function tableExists(table) {
-  const pool = mysql.createPool(dbConfig);
-  const [rows] = await pool.execute(`SHOW TABLES LIKE '${table}'`);
-  pool.end()
+  const [rows] = await query({
+    query: `SHOW TABLES LIKE '${table}'`,
+    values: [],
+  });
   return rows.length > 0;
 }
 
 export async function DELETE(req, {params}) {
-  const pool = mysql.createPool(dbConfig);
   try {
     const tableName = params.table;
     const tableExistsInDB = await tableExists(tableName);
@@ -20,14 +20,13 @@ export async function DELETE(req, {params}) {
     const body = await req.json();  
     const {nameID, ID} = body;      
     const sql = `DELETE FROM \`${tableName}\` WHERE \`${nameID}\` = ?`;
-    const [rows] = await pool.execute(sql, [ID]);
-    return Response.json({ rows });
+    const [rows] = await query({
+      query: sql, 
+      values: [ID]});
+    return NextResponse.json({ rows });
   } 
   catch (error) {
     console.error('Database query error:', error); 
-    return Response.json({ message:`Error retrieving data ` });
+    return NextResponse.json({ message:`Error retrieving data ` });
   } 
-  finally {
-    pool.end();
-  }
 }

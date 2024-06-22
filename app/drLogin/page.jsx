@@ -1,69 +1,31 @@
 "use client"
-import React, { useState, useEffect } from "react";
-import LoginLogos from "../../components/LoginLogos";
-import LoginImage from '../../components/LoginImage';
-import Cookies from 'js-cookie';
+import React, { useState } from "react";
+import LoginLogos from "@/components/LoginLogos";
+import LoginImage from "@/components/LoginImage";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function DrLogin() {
   const [drId, setDrId] = useState("");
   const [hastaneAdi, setHastaneAdi] = useState("");
-  const [doctors, setDoctors] = useState([]);
-  const [hospitals, setHospitals] = useState([]);
+  const router = useRouter();
 
-  useEffect(() => {
-    async function fetchHospital() {
-      try {
-        const response = await fetch('/api/getData/Hospital', { method: 'GET' });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setHospitals(data.rows)
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
-        setHospitals([])
-      }
-    }
-    async function fetchDoctor() {
-      try {
-        const response = await fetch('/api/getData/Doctor', { method: 'GET' });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setDoctors(data.rows)
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
-        setDoctors([])
-      }
-    }
-    fetchDoctor()
-    fetchHospital()
-    },[])
 
   const handleLogin = async () => {     
     
-      const doctor = doctors.find(d => d.doktorID == drId);
-      if (doctor) {
-        const control = hospitals.find(h => h.hastaneAdi == hastaneAdi && h.hastaneID == doctor.hastaneID)
-        if (control) {
-          const token = await new SignJWT({
-            id: control.doktorID
-          })
-          .setProtectedHeader({ alg: 'HS256'})
-          .setIssuedAt()
-          .setExpirationTime('1m')
-          .sign(getJWTSecretKey())
-          Cookies.set('doctorToken', token);
-        }
-        else
-          alert('Hatalı drID veya hastaneAdi');
-      } 
-      else {
-        alert('Hatalı drID veya hastaneAdi');
-      } 
+      const result = await signIn('credentials', {
+        username: drId,
+        password: hastaneAdi,
+        role: "doctor",
+        redirect: false
+      });
+  
+      if (result.error) {
+        alert("Hatalı")
+      }
+      else if(result.ok){
+        router.push('/drDash');
+      }
   };
 
   return (

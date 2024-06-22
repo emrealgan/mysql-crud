@@ -1,5 +1,8 @@
-import '../styles/global.css'
+// app/layout.js
+import '../styles/global.css';
 import React from 'react';
+import SessionProviderWrapper from '@/components/Provider';
+
 export const metadata = {
   title: "MHRS",
   description: "",
@@ -8,7 +11,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body >{children}</body>
+      <body>
+        <SessionProviderWrapper>
+          {children}
+        </SessionProviderWrapper>
+      </body>
     </html>
   );
 }
