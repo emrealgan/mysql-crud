@@ -1,6 +1,8 @@
 // Patient class
 export class Patient {
-    constructor(ad, soyad, dogumTarihi, cinsiyet, telefon, adres) {
+    constructor(kullaniciAdi, sifre, ad, soyad, dogumTarihi, cinsiyet, telefon, adres) {
+        this.kullaniciAdi = kullaniciAdi;
+        this.sifre = sifre;
         this.ad = ad;
         this.soyad = soyad;
         this.dogumTarihi = dogumTarihi;
@@ -12,7 +14,9 @@ export class Patient {
 
 // Doctor class
 export class Doctor {
-    constructor(ad, soyad, uzmanlikID, hastaneID) {
+    constructor(kullaniciAdi, sifre, ad, soyad, uzmanlikID, hastaneID) {
+        this.kullaniciAdi = kullaniciAdi;
+        this.sifre = sifre;
         this.ad = ad;
         this.soyad = soyad;
         this.uzmanlikID = uzmanlikID;

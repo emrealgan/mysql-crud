@@ -6,6 +6,8 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function DoctorList() {
 
   const initialDoctorState = {
+    username: '',
+    password: '',
     ad: '',
     soyad: '',
     uzmanlikID: null,
@@ -61,7 +63,6 @@ export default function DoctorList() {
         console.error('Error fetching data:', error);
         setDoctors([])
       }
-      console.log(doctors)
     }
     function messageToast(){
       if(isSuccess)
@@ -104,6 +105,8 @@ export default function DoctorList() {
     e.preventDefault();
     try {
       const newDoctorObj = new Doctor(
+        newDoctor.username,
+        newDoctor.password,
         newDoctor.ad,
         newDoctor.soyad,
         Number(newDoctor.uzmanlikID),
@@ -121,8 +124,10 @@ export default function DoctorList() {
   async function addNewDoctorToDatabase(newDoctorObj) {
     try {
       const sql = `INSERT INTO DOCTOR 
-      (ad, soyad, uzmanlikID, hastaneID) VALUES(?, ?, ?, ?)`;
+      (username, password, ad, soyad, uzmanlikID, hastaneID) VALUES(?, ?, ?, ?, ?, ?)`;
       const values = [
+        newDoctorObj.username,
+        newDoctorObj.password,
         newDoctorObj.ad,
         newDoctorObj.soyad,
         newDoctorObj.uzmanlikID,
@@ -298,6 +303,18 @@ export default function DoctorList() {
   
       <h2 className="text-2xl font-bold mt-8 mb-4">Yeni Doktor Ekle</h2>
       <form onSubmit={(e) => handleDoctorSubmit(e)} className="mb-8">
+      <input
+          type="text"
+          placeholder="Username"
+          className="border border-gray-300 px-4 py-2 rounded-lg mb-2"
+          onChange={(e) => setNewDoctor({ ...newDoctor, username: e.target.value.trim().toLowerCase() })}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border border-gray-300 px-4 py-2 rounded-lg mb-2"
+          onChange={(e) => setNewDoctor({ ...newDoctor, password: e.target.value.trim() })}
+        />
         <input
           type="text"
           placeholder="Ad"

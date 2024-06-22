@@ -15,7 +15,7 @@ export default function Admin() {
     return <div>Loading...</div>;
   }
   console.log(session);
-  if (session.user.role !== "admin") {
+  if (session.user.role !== "administrator") {
     return <div>You are not authenticated.</div>;
   }
   return (
@@ -23,7 +23,7 @@ export default function Admin() {
     <div className="container mx-auto px-4 bg-gray-50">
       <button
         className="mt-2 p-2 bg-red-500 text-white"
-        onClick={() => signOut()}
+        onClick={() => signOut({callbackUrl: '/'})}
       >
         Logout
       </button>

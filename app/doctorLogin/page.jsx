@@ -2,9 +2,9 @@
 import React from "react";
 import Login from "@/components/Login";
 
-export default function AdminLogin() {
+export default function drLogin() {
 
   return (
-    <Login role="administrator" />
+    <Login role="doctor" />
   );
 }

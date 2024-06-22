@@ -8,8 +8,7 @@ export default function CitizenDash() {
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-  console.log(session)
-if (session.user.role !== "patient") {
+if (!session || session.user.role !== "patient") {
     return <div>You are not authenticated.</div>;
   }
 
@@ -17,7 +16,7 @@ if (session.user.role !== "patient") {
     <div>
       <button
         className="mt-2 p-2 bg-red-500 text-white"
-        onClick={() => signOut()}
+        onClick={() => signOut({callbackUrl: '/'})}
       >
         Logout
       </button>

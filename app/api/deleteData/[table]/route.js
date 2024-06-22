@@ -22,7 +22,8 @@ export async function DELETE(req, {params}) {
     const sql = `DELETE FROM \`${tableName}\` WHERE \`${nameID}\` = ?`;
     const [rows] = await query({
       query: sql, 
-      values: [ID]});
+      values: [ID]
+    });
     return NextResponse.json({ rows });
   } 
   catch (error) {

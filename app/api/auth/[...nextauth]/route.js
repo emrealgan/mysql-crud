@@ -1,11 +1,6 @@
+import { query } from '@/app/lib/dbConnection';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
-const users = {
-  admin: { username: 'admin', password: '1234', role: 'admin' },
-  patient: { username: 'patient', password: 'pati', role: 'patient' },
-  doctor: { username: 'doctor', password: 'abcd', role: 'doctor' },
-};
 
 const handler = NextAuth({
   providers: [
@@ -17,15 +12,22 @@ const handler = NextAuth({
         role: { label: 'Role', type: 'text' }, // Add role to credentials
       },
       authorize: async (credentials) => {
-        const { username, password } = credentials;
-        const user = users[username];
-      
-        if (user && user.password === password) {
-          return { username: username, role: user.role }; // Include role in the returned object
-        } else {
-          return null;
+        const { username, password, role } = credentials;
+        const sql = `SELECT * FROM ${role} WHERE username = ?`;
+        const [rows] = await query({
+          query: sql,
+          values: [username.toLowerCase()]
+        });
+        // Kullanıcı bulunduysa şifre kontrolü yapın
+        if (rows.length > 0) {
+          const user = rows[0];
+          if (user.password == password) {
+            return { username: username, role: role };
+          }
         }
-      },
+        // Kullanıcı bulunamadı veya şifre eşleşmedi
+        return null;
+      },      
     }),
   ],
   callbacks: {

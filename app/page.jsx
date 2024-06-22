@@ -38,8 +38,8 @@ export default function Home() {
         </div>
 
         <div id="buttons" className="flex items-end	justify-start mr-32 pr-20">
-          <Link href="/citizenLogin" className="m-4 bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded">Randevu Al</Link>
-          <Link href="/drLogin" className="m-4 bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded">Doktor Paneli</Link>
+          <Link href="/patientLogin" className="m-4 bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded">Randevu Al</Link>
+          <Link href="/doctorLogin" className="m-4 bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded">Doktor Paneli</Link>
           <Link href="/adminLogin" className="m-4 bg-blue-900 hover:bg-blue-800 text-white py-2 px-4 rounded">Admin Paneli</Link>
 
         </div>

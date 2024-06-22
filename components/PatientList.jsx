@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Patient } from '@/app/lib/models';
 import toast, { Toaster } from 'react-hot-toast';
 
-
 export default function PatientList() {
 
   const initialPatientState = {
+    username: '',
+    password: '',
     ad: '',
     soyad: '',
     dogumTarihi: '',
@@ -75,6 +76,8 @@ export default function PatientList() {
     e.preventDefault();
     try {
       const newPatientObj = new Patient(
+        newPatient.username,
+        newPatient.password,
         newPatient.ad,
         newPatient.soyad,
         newPatient.dogumTarihi,
@@ -93,8 +96,10 @@ export default function PatientList() {
   async function addNewPatientToDatabase(newPatientObj) {
     try {
       const sql = `INSERT INTO Patient 
-        (ad, soyad, dogumTarihi, cinsiyet, telefon, adres) VALUES(?, ?, ?, ?, ?, ?)`;
+        (username, password, ad, soyad, dogumTarihi, cinsiyet, telefon, adres) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
       const values = [
+        newPatientObj.username,
+        newPatientObj.password,
         newPatientObj.ad,
         newPatientObj.soyad,
         newPatientObj.dogumTarihi,
@@ -287,6 +292,20 @@ export default function PatientList() {
 
       <h2 className="text-2xl font-bold mt-8 mb-4">Yeni Hasta Ekle</h2>
       <form onSubmit={(e) => handlePatientSubmit(e)} className="mb-8">
+      <input
+          name='username'
+          type="text"
+          placeholder="Username"
+          className="border border-gray-300 px-4 py-2 rounded-lg mb-2"
+          onChange={(e) => setNewPatient({ ...newPatient, username: e.target.value.trim().toLowerCase() })}
+        />
+        <input
+          name='password'
+          type="password"
+          placeholder="Password"
+          className="border border-gray-300 px-4 py-2 rounded-lg mb-2"
+          onChange={(e) => setNewPatient({ ...newPatient, password: e.target.value.trim() })}
+        />
         <input
           name='name'
           type="text"

@@ -8,8 +8,7 @@ export default function drDash() {
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-  console.log(session)
-if (session.user.role !== "doctor") {
+if (!session || session.user.role !== "doctor") {
     return <div>You are not authenticated.</div>;
   }
 
@@ -17,7 +16,7 @@ if (session.user.role !== "doctor") {
     <div>
       <button
         className="mt-2 p-2 bg-red-500 text-white"
-        onClick={() => signOut()}
+        onClick={() => signOut({callbackUrl: '/'})}
       >
         Logout
       </button>

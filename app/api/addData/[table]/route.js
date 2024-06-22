@@ -8,7 +8,7 @@ export async function POST(req) {
     const { sql, values } = body;  
     const result = await query({
       query: sql,
-      values: values,
+      values: [values],
     });
     return NextResponse.json({ message: 'User added successfully', data: result });
   } 

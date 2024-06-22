@@ -14,6 +14,8 @@ async function createDatabaseAndTables() {
 
     await newPool.query(`CREATE TABLE IF NOT EXISTS Patient (
       hastaID INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) UNIQUE,
+      password VARCHAR(255),
       ad VARCHAR(255),
       soyad VARCHAR(255),
       dogumTarihi DATE,
@@ -25,6 +27,8 @@ async function createDatabaseAndTables() {
 
     await newPool.query(`CREATE TABLE IF NOT EXISTS Doctor (
       doktorID INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) UNIQUE,
+      password VARCHAR(255),
       ad VARCHAR(255),
       soyad VARCHAR(255),
       uzmanlikID INT,
