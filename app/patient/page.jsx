@@ -22,6 +22,7 @@ if (!session || session.user.role !== "patient") {
       </button>
       <h1>Welcome, {session.user.username}!</h1>
       <p>Your role is: {session.user.role}</p>
+      
     </div>
   );
 }

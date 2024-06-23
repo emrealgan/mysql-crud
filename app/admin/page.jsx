@@ -23,7 +23,7 @@ export default function Admin() {
     <div className="container mx-auto px-4 bg-gray-50">
       <button
         className="mt-2 p-2 bg-red-500 text-white"
-        onClick={() => signOut({callbackUrl: '/'})}
+        onClick={() => signOut()}
       >
         Logout
       </button>

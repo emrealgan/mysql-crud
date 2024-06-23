@@ -16,7 +16,7 @@ if (!session || session.user.role !== "doctor") {
     <div>
       <button
         className="mt-2 p-2 bg-red-500 text-white"
-        onClick={() => signOut({callbackUrl: '/'})}
+        onClick={() => signOut()}
       >
         Logout
       </button>
